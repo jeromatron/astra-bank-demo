@@ -16,7 +16,7 @@ exports.handler = async function(event,context) {
     const {data,status} = await astraClient.get(`${basePath}/${username}`);
     return {
       statusCode: status,
-      body: JSON.stringify(data[0].account_id),
+      body: JSON.stringify(data[0].user_id),
     };
   } catch(e) {
     console.error(e);

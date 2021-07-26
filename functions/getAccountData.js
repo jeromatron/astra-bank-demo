@@ -3,7 +3,7 @@ const { ContactsOutlined } = require("@material-ui/icons");
 
 exports.handler = async function(event,context) {
 
-  const account = event.queryStringParameters.account;
+  const userid = event.queryStringParameters.userid;
 
   // create an {astra_db} client
   const astraClient = await createClient({
@@ -12,15 +12,13 @@ exports.handler = async function(event,context) {
     applicationToken: process.env.ASTRA_DB_APPLICATION_TOKEN,
   });
 
-  // collections are created automatically
-  const accountCollection = astraClient.namespace(process.env.ASTRA_DB_KEYSPACE).collection("accountinfo");
+  const basePath = `/api/rest/v2/keyspaces/${process.env.ASTRA_DB_KEYSPACE}/`
 
   try{
-    // const result = await accountCollection.find()
-    const result = await accountCollection.get(account)
+    const {accounts,status} = await astraClient.get(`{basePath}/accounts/${userid}`);
     return {
       statusCode: 200,
-      body: JSON.stringify(result),
+      body: JSON.stringify(accounts),
     };
   } catch(e) {
     console.error(e);
